@@ -32,6 +32,7 @@ from DISClib.DataStructures import mapentry as me
 from DISClib.Algorithms.Sorting import shellsort as sa
 from DISClib.ADT import orderedmap as om
 assert cf
+import datetime
 
 """
 Se define la estructura de un catálogo de videos. El catálogo tendrá dos listas, una para los videos, otra para las categorias de
@@ -40,13 +41,20 @@ los mismos.
 
 # Construccion de modelos
 def newCatalog():
-    catalog = {'informacion': None,
+    catalog = {'info': None,
     'ciudad' : None
     }
-    catalog['informacion'] = om.newMap(omaptype="RBT", comparefunction=compareDates)
+    catalog['info'] = om.newMap(omaptype="RBT", comparefunction=compareDates)
     catalog['ciudad'] = om.newMap(omaptype="RBT", comparefunction=compareDates)
+    return catalog
 
 # Funciones para agregar informacion al catalogo
+def addUFO(catalog,UFO):
+    UFO["datetime"] = datetime.datetime.strptime(UFO["datetime"], "%Y-%m-%d %H:%M:%S")
+    om.put(catalog['info'], UFO['datetime'], UFO)
+    ciudadhash = hash(UFO["city"])
+    om.put(catalog["ciudad"], ciudadhash, UFO)
+
 
 # Funciones para creacion de datos
 

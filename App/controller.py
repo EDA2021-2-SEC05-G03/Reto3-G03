@@ -34,6 +34,13 @@ def init():
     return model.newCatalog()
 
 # Funciones para la carga de datos
+def loadData(catalog,archivo):
+    archivo = cf.data_dir + archivo
+    input_file = csv.DictReader(open(archivo, encoding="utf-8"),
+    delimiter = ",")
+    for ufo in input_file:
+        model.addUFO(catalog,ufo)
+    return catalog
 
 # Funciones de ordenamiento
 

@@ -25,6 +25,7 @@ import sys
 import controller
 from DISClib.ADT import list as lt
 assert cf
+from DISClib.ADT import orderedmap as om
 
 
 """
@@ -46,8 +47,9 @@ def printMenu():
     print("8- Requierimiento 6: Visualizar los avistamientos de una zona geográfica")
     print("0- Salir")
 
-archivo = "//UFOS-utf8-small.csv"
+
 catalog = None
+archivo = "UFOS//UFOS-utf8-small.csv"
 
 """
 Menu principal
@@ -60,8 +62,16 @@ while True:
         catalog = controller.init()
 
     elif int(inputs[0]) == 2:
-        pass
-
+        controller.loadData(catalog, archivo)
+        print("Avistamientos cargados: " + str(om.size(catalog['info'])))
+        print("Altura del arbol: " + str(om.height(catalog['info'])))
+        print("Menor llave: " + str(om.minKey(catalog['info'])))
+        print("Mayor llave: " + str(om.maxKey(catalog['info'])))
+    
+    elif int(inputs[0]) == 3:
+        #Como no vamos a avanzar en el requerimiento, solo haremos la carga de datos por llave: ciudad, valor: lista de avistamientos.
+        print("Ciudades cargadas: " + str(om.size(catalog['ciudad'])))
+        print("Altura del arbol: " + str(om.height(catalog['ciudad'])))
     else:
         sys.exit(0)
 sys.exit(0)
