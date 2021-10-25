@@ -36,9 +36,17 @@ operación solicitada
 
 def printMenu():
     print("Bienvenido")
-    print("1- Cargar información en el catálogo")
-    print("2- ")
+    print("1- Iniciar catálogo")
+    print("2- Cargar información de avistamientos")
+    print("3- Requerimiento 1: Contar los avistamientos en una ciudad")
+    print("4- Requerimiento 2: Contar los avistamientos por duración")
+    print("5- Requerimiento 3: Contar avistamientos por Hora/Minutos del día")
+    print("6- Requerimiento 4: Contar los avistamientos en un rango de fechas")
+    print("7- Requerimiento 5: Contar los avistamientos de una Zone Geográfica")
+    print("8- Requierimiento 6: Visualizar los avistamientos de una zona geográfica")
+    print("0- Salir")
 
+archivo = "//UFOS-utf8-small.csv"
 catalog = None
 
 """
@@ -48,7 +56,8 @@ while True:
     printMenu()
     inputs = input('Seleccione una opción para continuar\n')
     if int(inputs[0]) == 1:
-        print("Cargando información de los archivos ....")
+        print("Inicializando el catálogo ...")
+        catalog = controller.init()
 
     elif int(inputs[0]) == 2:
         pass

@@ -30,6 +30,7 @@ from DISClib.ADT import list as lt
 from DISClib.ADT import map as mp
 from DISClib.DataStructures import mapentry as me
 from DISClib.Algorithms.Sorting import shellsort as sa
+from DISClib.ADT import orderedmap as om
 assert cf
 
 """
@@ -38,6 +39,12 @@ los mismos.
 """
 
 # Construccion de modelos
+def newCatalog():
+    catalog = {'informacion': None,
+    'ciudad' : None
+    }
+    catalog['informacion'] = om.newMap(omaptype="RBT", comparefunction=compareDates)
+    catalog['ciudad'] = om.newMap(omaptype="RBT", comparefunction=compareDates)
 
 # Funciones para agregar informacion al catalogo
 
@@ -48,3 +55,13 @@ los mismos.
 # Funciones utilizadas para comparar elementos dentro de una lista
 
 # Funciones de ordenamiento
+
+# Funciones de comparación
+
+def compareDates(date1, date2):
+    if (date1 == date2):
+        return 0
+    elif (date1>date2):
+        return 1
+    else:
+        return -1
