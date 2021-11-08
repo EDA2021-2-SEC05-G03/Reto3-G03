@@ -45,3 +45,8 @@ def loadData(catalog,archivo):
 # Funciones de ordenamiento
 
 # Funciones de consulta sobre el catálogo
+
+
+def requerimiento1(catalog, ciudad):
+    return model.requerimiento1(catalog, ciudad)
+

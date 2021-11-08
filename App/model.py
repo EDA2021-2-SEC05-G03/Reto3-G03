@@ -45,15 +45,32 @@ def newCatalog():
     'ciudad' : None
     }
     catalog['info'] = om.newMap(omaptype="RBT", comparefunction=compareDates)
-    catalog['ciudad'] = om.newMap(omaptype="RBT", comparefunction=compareDates)
+    catalog['ciudad'] = om.newMap(omaptype="RBT", comparefunction=compareDates) #hashciudad-info
+    catalog['hash']=mp.newMap(numelements=804,maptype="LINEAR_PROBING",loadfactor=0.5) #hash-ciudad
     return catalog
 
 # Funciones para agregar informacion al catalogo
 def addUFO(catalog,UFO):
     UFO["datetime"] = datetime.datetime.strptime(UFO["datetime"], "%Y-%m-%d %H:%M:%S")
     om.put(catalog['info'], UFO['datetime'], UFO)
+    
     ciudadhash = hash(UFO["city"])
-    om.put(catalog["ciudad"], ciudadhash, UFO)
+    presente = om.contains(catalog["ciudad"],ciudadhash)
+    if not presente:
+        lista = lt.newList(datastructure="ARRAY_LIST")
+        lt.addLast(lista,UFO)
+        om.put(catalog["ciudad"], ciudadhash, lista)
+    else:
+        lista = om.get(catalog["ciudad"], ciudadhash)["value"]
+        lt.addLast(lista,UFO)
+        om.put(catalog["ciudad"], ciudadhash, lista)
+
+    presente2 = mp.contains(catalog["hash"],UFO["city"])
+    if not presente2:      
+        mp.put(catalog["hash"],UFO["city"],ciudadhash)
+    else:        
+        None
+          
 
 
 # Funciones para creacion de datos
@@ -67,9 +84,18 @@ def addUFO(catalog,UFO):
 # Funciones de comparación
 
 def compareDates(date1, date2):
+   
     if (date1 == date2):
         return 0
     elif (date1>date2):
         return 1
     else:
         return -1
+
+def requerimiento1(catalog, ciudad):
+    hash_num = mp.get(catalog["hash"],ciudad)["value"]
+ 
+    info = om.get(catalog["ciudad"],hash_num)["value"]
+    print(info)
+    
+  
