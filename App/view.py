@@ -74,7 +74,20 @@ while True:
         print("Altura del arbol: " + str(om.height(catalog['ciudad'])))
         ciudad = input('Ingrese la ciudad: ')
         info = controller.requerimiento1(catalog, ciudad)
-      
+        print("+"+("-"*150)+"+")
+        count = 0
+        for i in lt.iterator(info[0]):
+            count+=1
+            if count <= 3:
+                l = om.get(info[1],i)["value"]        
+                print("|"+ str(l["datetime"])+" | "+ l["city"].center(30)+" | "+ l["state"].center(15)+" | "+l["country"].center(20)+" | "+l["shape"].center(15)+" | "+ str(l["duration (seconds)"]).center(30)+" | ")
+                print("+"+("-"*150)+"+")
+            else:
+                break
+
+
+        
+        
    
     elif int(inputs[0]) == 5:
         #Como no vamos a avanzar en el requerimiento, solo haremos la carga de datos por llave: ciudad, valor: lista de avistamientos.

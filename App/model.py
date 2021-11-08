@@ -53,17 +53,17 @@ def newCatalog():
 def addUFO(catalog,UFO):
     UFO["datetime"] = datetime.datetime.strptime(UFO["datetime"], "%Y-%m-%d %H:%M:%S")
     om.put(catalog['info'], UFO['datetime'], UFO)
-    
+
     ciudadhash = hash(UFO["city"])
     presente = om.contains(catalog["ciudad"],ciudadhash)
     if not presente:
-        lista = lt.newList(datastructure="ARRAY_LIST")
-        lt.addLast(lista,UFO)
-        om.put(catalog["ciudad"], ciudadhash, lista)
+        arbol = om.newMap(omaptype="RBT", comparefunction=compareDates)      
+        om.put(arbol,UFO['datetime'],UFO)
+        om.put(catalog["ciudad"], ciudadhash, arbol)
     else:
-        lista = om.get(catalog["ciudad"], ciudadhash)["value"]
-        lt.addLast(lista,UFO)
-        om.put(catalog["ciudad"], ciudadhash, lista)
+        arbol = om.get(catalog["ciudad"], ciudadhash)["value"]
+        om.put(arbol,UFO['datetime'],UFO)
+        om.put(catalog["ciudad"], ciudadhash, arbol)
 
     presente2 = mp.contains(catalog["hash"],UFO["city"])
     if not presente2:      
@@ -94,8 +94,13 @@ def compareDates(date1, date2):
 
 def requerimiento1(catalog, ciudad):
     hash_num = mp.get(catalog["hash"],ciudad)["value"]
- 
     info = om.get(catalog["ciudad"],hash_num)["value"]
-    print(info)
+    size = om.size(info)
+    print("El total de avisamientos para la ciudad de " + str(ciudad)+ " es de "+ str(size))
+    keys = om.keySet(info)
+    map = om.get(catalog["ciudad"],hash_num)["value"]
+    
+    return(keys,map,size)
+    
     
   
