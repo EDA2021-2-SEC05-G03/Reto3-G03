@@ -52,3 +52,5 @@ def loadData(catalog,archivo):
 def requerimiento1(catalog, ciudad):
     return model.requerimiento1(catalog, ciudad)
 
+def requerimiento3(catalog, begin, end):
+    return model.requerimiento3(catalog, begin, end)
