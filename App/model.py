@@ -45,32 +45,56 @@ def newCatalog():
     'ciudad' : None
     }
     catalog['info'] = om.newMap(omaptype="RBT", comparefunction=compareDates)
-    catalog['ciudad'] = om.newMap(omaptype="RBT", comparefunction=compareDates) #hashciudad-info
-    catalog['hash']=mp.newMap(numelements=804,maptype="LINEAR_PROBING",loadfactor=0.5) #hash-ciudad
+    catalog['ciudad']=mp.newMap(numelements=804,maptype="LINEAR_PROBING",loadfactor=0.5) #ciudad-rbtavistamientos
+    catalog['topciudades'] = om.newMap(omaptype="RBT", comparefunction=compareDates) #rbt ordenado por cantidad de avistamientos.
     return catalog
 
 # Funciones para agregar informacion al catalogo
 def addUFO(catalog,UFO):
+
+    #Carga del rbt principal ordenado por datetime de todos los avistamientos.
     UFO["datetime"] = datetime.datetime.strptime(UFO["datetime"], "%Y-%m-%d %H:%M:%S")
     om.put(catalog['info'], UFO['datetime'], UFO)
-
-    ciudadhash = hash(UFO["city"])
-    presente = om.contains(catalog["ciudad"],ciudadhash)
+    
+    #Req1: Carga de ciudad-rbt ordenado por fecha de avistamiento
+    presente = mp.contains(catalog["ciudad"],UFO['city'])
     if not presente:
         arbol = om.newMap(omaptype="RBT", comparefunction=compareDates)      
         om.put(arbol,UFO['datetime'],UFO)
-        om.put(catalog["ciudad"], ciudadhash, arbol)
+        mp.put(catalog["ciudad"], UFO['city'], arbol)
     else:
-        arbol = om.get(catalog["ciudad"], ciudadhash)["value"]
+        arbol = mp.get(catalog["ciudad"], UFO['city'])["value"]
         om.put(arbol,UFO['datetime'],UFO)
-        om.put(catalog["ciudad"], ciudadhash, arbol)
+        mp.put(catalog["ciudad"], UFO['city'], arbol)
 
-    presente2 = mp.contains(catalog["hash"],UFO["city"])
-    if not presente2:      
-        mp.put(catalog["hash"],UFO["city"],ciudadhash)
-    else:        
-        None
-          
+def requerimiento1topciudades(catalog):
+    """ 
+    Se va a crear un rbt ordenado por la cantidad de avistamientos
+    en cada ciudad, para hacer la tabla del requerimiento 1 del top
+    5 ciudades con mayor número de avistamientos.
+    """
+    #Se obtienen las llaves de todo el mapa
+    ciudades = mp.keySet(catalog['ciudad'])
+    #Se itera para ir agregando al order map en orden de avistamientos.
+    for ciudad in lt.iterator(ciudades):
+        arbol = mp.get(catalog['ciudad'], ciudad)['value']
+        tamaño = om.size(arbol)
+        datos = (ciudad,tamaño)
+        presente = om.contains(catalog['topciudades'], tamaño)
+        if not presente:
+            lista = lt.newList(datastructure="ARRAYLIST")
+            lt.addLast(lista, datos)
+            om.put(catalog['topciudades'], tamaño, lista)
+        else:
+            lista = om.get(catalog['topciudades'], tamaño)['value']
+            lt.addLast(lista,datos)
+
+
+
+
+
+    
+
 
 
 # Funciones para creacion de datos
@@ -92,15 +116,45 @@ def compareDates(date1, date2):
     else:
         return -1
 
+
 def requerimiento1(catalog, ciudad):
-    hash_num = mp.get(catalog["hash"],ciudad)["value"]
-    info = om.get(catalog["ciudad"],hash_num)["value"]
+    #Se obtiene el rbt que tiene ordenado por fechas los avistamientos de esa ciudad:
+    info = mp.get(catalog["ciudad"],ciudad)["value"]
+    #Se obtiene el tamaño que es la cantidad de avistamientos en esa ciudad:
     size = om.size(info)
-    print("El total de avisamientos para la ciudad de " + str(ciudad)+ " es de "+ str(size))
-    keys = om.keySet(info)
-    map = om.get(catalog["ciudad"],hash_num)["value"]
-    
-    return(keys,map,size)
-    
-    
-  
+    #Se obtiene el total de ciudad con avistamientos:
+    sizecitys = mp.size(catalog['ciudad'])
+    #Lista con el top 5 de las ciudades con mayor avistamiento:
+    mayores5 = lt.newList(datastructure="ARRAY_LIST")
+    x = 0
+    while x < 5:
+        maxkeyciudades = om.maxKey(catalog['topciudades'])
+        ciudades = om.get(catalog['topciudades'], maxkeyciudades)['value']
+        for ciudad in lt.iterator(ciudades):
+            lt.addLast(mayores5, ciudad)
+            x += 1
+        om.deleteMax(catalog['topciudades'])
+
+    #Se obtienen los primeros 3 y ultimos 3 avistamientos de la ciudad.
+    #Hacemos copia para no modificar el rbt original
+    info = info.copy()
+    #Lista para guardar una lista con los primeros 3 y últimos 3
+    menoresymayores3 = lt.newList(datastructure="ARRAY_LIST")
+    #Lista para guardar los mayores, ya que por el API de los ordered maps quedan al revés si se ingresan así
+    mayoresinorganizar = lt.newList(datastructure="SINGLE_LINKED")
+    #Se hacen 3 iteraciones para tomar los primeros 3
+    for x in range(0,3):
+        minimakey= om.minKey(info)
+        minima = om.get(info, minimakey)["value"]
+        lt.addLast(menoresymayores3,minima)
+        om.deleteMin(info)
+    #Se hacen 3 iteraciones para tomar los últimos 3, se agregan a otra lista para luego agregarlos a la lista de salida ya ordenados.
+    for x in range(0,3):
+        maxkey= om.maxKey(info)
+        max = om.get(info, maxkey)["value"]
+        lt.addFirst(mayoresinorganizar,max)
+        om.deleteMax(info)
+    #Se agregan los datos de la lista que contiene los mayores, a la lista de salida para que todo quede en orden.
+    for x in lt.iterator(mayoresinorganizar):
+        lt.addLast(menoresymayores3,x)
+    return(size, sizecitys,mayores5,menoresymayores3)

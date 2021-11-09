@@ -40,6 +40,8 @@ def loadData(catalog,archivo):
     delimiter = ",")
     for ufo in input_file:
         model.addUFO(catalog,ufo)
+    #Función que crea un rbt con el numero de avistamientos por ciudad.
+    model.requerimiento1topciudades(catalog)
     return catalog
 
 # Funciones de ordenamiento

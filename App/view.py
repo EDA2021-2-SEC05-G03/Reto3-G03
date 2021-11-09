@@ -26,6 +26,7 @@ import controller
 from DISClib.ADT import list as lt
 assert cf
 from DISClib.ADT import orderedmap as om
+from DISClib.ADT import map as mp
 
 
 """
@@ -69,28 +70,40 @@ while True:
         print("Mayor llave: " + str(om.maxKey(catalog['info'])))
     
     elif int(inputs[0]) == 3:
-        #Como no vamos a avanzar en el requerimiento, solo haremos la carga de datos por llave: ciudad, valor: lista de avistamientos.
-        print("Ciudades cargadas: " + str(om.size(catalog['ciudad'])))
-        print("Altura del arbol: " + str(om.height(catalog['ciudad'])))
-        ciudad = input('Ingrese la ciudad: ')
+        print("=" * 15 + " Req No. 1 Inputs " + "=" * 15)
+        ciudad = input("UFO Sightings in the city of: ")
         info = controller.requerimiento1(catalog, ciudad)
-        print("+"+("-"*150)+"+")
-        count = 0
-        for i in lt.iterator(info[0]):
-            count+=1
-            if count <= 3:
-                l = om.get(info[1],i)["value"]        
-                print("|"+ str(l["datetime"])+" | "+ l["city"].center(30)+" | "+ l["state"].center(15)+" | "+l["country"].center(20)+" | "+l["shape"].center(15)+" | "+ str(l["duration (seconds)"]).center(30)+" | ")
-                print("+"+("-"*150)+"+")
-            else:
+        print("=" * 15 + " Req No. 1 Outputs " + "=" * 15)
+        print('There are ' + str(info[1]) + ' different cities with UFO sightings...')
+        print('The TOP 5 cities with most UFO sightings are: ')
+        #Se imprimen las top 5 mayores ciudades con mayor cantidad de avistamientos
+        y = 0
+        print ("=" * 48)
+        for x in lt.iterator(info[2]):
+            if y > 4:
                 break
+            y += 1
+            print(str(y) + ". City: " + x[0] + ", Count: " + str(x[1]))
+            print("=" * 48)
+        #
+        print('There are ' + str(info[0]) + ' sigthings at the: ' + ciudad + ' city')
+        print('The first 3 and last 3 UFO sigthings in the city are:')
+        print("=" * 50)
+        for x in lt.iterator(info[3]):
+            print('datetime: ' + str(x['datetime']))
+            print('city: ' + x['city'])
+            print('state: ' + x['state'])
+            print('country: ' + x['country'])
+            print('shape: ' + x['shape'])
+            print('duration (seconds): ' + x['duration (seconds)'])
+            print("=" * 50)
+            
 
 
         
         
    
     elif int(inputs[0]) == 5:
-        #Como no vamos a avanzar en el requerimiento, solo haremos la carga de datos por llave: ciudad, valor: lista de avistamientos.
         lim_inf = input('Ingrese el limite inferior en formato HH:MM: ')
         lim_sup = input('Ingrese el limite superior en formato HH:MM: ')
 
