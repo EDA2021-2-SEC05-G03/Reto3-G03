@@ -140,19 +140,23 @@ def addUFO(catalog,UFO):
         om.put(catalog["lat"], lat, arbol3)
     else:
         arbol3 = om.get(catalog["lat"], lat)["value"]
+        k2 = om.get(catalog["lat"], lat)["value"]["root"]["key"]  
         presente5 = om.contains(arbol3,long)
         if not presente5:
-            om.put(arbol3,long,UFO)
-            om.put(catalog["lat"], lat, arbol3)
+            val = om.valueSet(arbol3)            
+            for i in lt.iterator(val):
+                om.put(arbol3,k2,i)
+                om.put(catalog["lat"], lat, arbol3)
         else:      
             info = om.get(arbol3, long)["value"]
             lista = lt.newList(datastructure="ARRAY_LIST")
             if type(info) != dict:
-                lt.addLast(lista,info)
+                lt.addLast(lista,info)                
                 lt.addLast(lista,UFO)
             else:
-                lt.addLast(lista,UFO)
-            om.put(arbol3,long,lista)
+                for i in lt.iterator(info):
+                    lt.addLast(lista,i)
+            om.put(arbol3,k2,lista)
             om.put(catalog["lat"], lat, arbol3)
             
 # Funciones de comparación
