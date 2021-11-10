@@ -138,8 +138,18 @@ def addUFO(catalog,UFO):
         om.put(catalog["lat"], lat, arbol3)
     else:
         arbol3 = om.get(catalog["lat"], lat)["value"]
-        om.put(arbol3,long,UFO)
-        om.put(catalog["lat"], lat, arbol3)
+        presente = om.contains(arbol3,long)
+        if not presente:
+            om.put(arbol3,long,UFO)
+            om.put(catalog["lat"], lat, arbol3)
+        else:
+            info = om.get(arbol3, long)["value"]
+            lista = lt.newList(datastructure="ARRAY_LIST")
+            lt.addLast(lista,info)
+            lt.addLast(lista,UFO)
+            om.put(arbol3,long,lista)
+            om.put(catalog["lat"], lat, arbol3)
+            
 
 
 def requerimiento1topciudades(catalog):
@@ -406,22 +416,33 @@ def requerimiento5(catalog,lo_max,lo_min,la_max,la_min):
     lat_max = round(float(la_max),2)
     lat_min = round(float(la_min),2)
 
-    keys = om.values(catalog["lat"],lat_min,lat_max)
+    values = om.values(catalog["lat"],lat_min,lat_max)
+    
     lista = lt.newList(datastructure="ARRAY_LIST")
 
-    for i in lt.iterator(keys):
-        print(i)
-        values = om.keys(i,lon_min,lon_max)
-        print(values)
-        lt.addLast(lista,values)
+    for i in lt.iterator(values):  
+        key = i["root"]["key"]
+        if lon_min <= key <= lon_max:  
+            value = i["root"]["value"]
+            s = lt.size(i["root"])
 
-    tam = 0
-    for t in lt.iterator(lista):
-        
-        l = lt.size(t)
-        tam += l
+            print(s)
+            if value[0]== "elements":
+                
+            if s==1:
+                lt.addLast(lista,i["root"]["key"])
+            else:
+                d = om.get(i,i["root"]["key"])
+                print(d)
+                for i in lt.iterator(d):
+                    lt.addLast(lista,i)
+            
 
-    print(tam)
+    
+    l = lt.size(lista)
+    print(lista)
+
+ 
   
         
 

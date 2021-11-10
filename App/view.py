@@ -157,8 +157,8 @@ while True:
         #lat_min = input('Ingrese el limite minimo de latitud: ')
         lat_max="37.0"
         lat_min="31.33"
-        lon_max="-109.05"
-        lon_min="-103.0"
+        lon_min="-109.05"
+        lon_max="-103.0"
         info = controller.requerimiento5(catalog,lon_max,lon_min,lat_max,lat_min)
     else:
         sys.exit(0)
