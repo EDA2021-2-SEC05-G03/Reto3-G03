@@ -77,7 +77,8 @@ while True:
     
     elif int(inputs[0]) == 3:
         print("=" * 15 + " Req No. 1 Inputs " + "=" * 15)
-        ciudad = input("UFO Sightings in the city of: ")
+        #ciudad = input("UFO Sightings in the city of: ")
+        ciudad = 'las vegas'
         t1 = process_time()
         info = controller.requerimiento1(catalog, ciudad)
         t2 = process_time()
@@ -108,8 +109,10 @@ while True:
 
     elif int(inputs[0]) == 4:
         print("=" * 15 + " Req No. 2 Inputs " + "=" * 15)
-        mins = input("UFO sightings between ")
-        maxs = input("and ")
+        #mins = input("UFO sightings between ")
+        #maxs = input("and ")
+        mins = "30"
+        maxs = "150"
         t1 = process_time()
         info = controller.requerimiento2(catalog,mins,maxs)
         t2 = process_time()
@@ -135,8 +138,10 @@ while True:
    
     elif int(inputs[0]) == 5:
         print("=" * 15 + " Req No. 3 Inputs " + "=" * 15)
-        lim_inf = input('Ingrese el limite inferior en formato HH:MM: ')
-        lim_sup = input('Ingrese el limite superior en formato HH:MM: ')
+        #lim_inf = input('Ingrese el limite inferior en formato HH:MM: ')
+        #lim_sup = input('Ingrese el limite superior en formato HH:MM: ')
+        lim_inf = '20:45'
+        lim_sup = '23:15'
         print("=" * 15 + " Req No. 3 Outputs " + "=" * 15)
         t1 = process_time()
         info = controller.requerimiento3(catalog, lim_inf, lim_sup)
@@ -157,8 +162,10 @@ while True:
 
     elif int(inputs[0]) == 6:
         print("=" * 15 + " Req No. 4 Inputs " + "=" * 15)
-        lim_inf = input('Ingrese el limite inferior en formato AA-MM-DD: ')
-        lim_sup = input('Ingrese el limite superior en formato AA-MM-DD: ') 
+        #lim_inf = input('Ingrese el limite inferior en formato AA-MM-DD: ')
+        #lim_sup = input('Ingrese el limite superior en formato AA-MM-DD: ') 
+        lim_inf = "1945-08-06"
+        lim_sup = "1984-11-15"
         print("=" * 15 + " Req No. 4 Outputs " + "=" * 15)
         t1 = process_time()
         info = controller.requerimiento4(catalog, lim_inf, lim_sup)
@@ -178,10 +185,10 @@ while True:
 
     elif int(inputs[0]) == 7:
         print("=" * 15 + " Req No. 5 Inputs " + "=" * 15)
-   #      lat_min = input('Ingrese el limite minimo de latitud: ')
-   #     lat_max = input('Ingrese el limite maximo de latitud: ')  
-    #    lon_min = input('Ingrese el limite minimo de longitud: ')
-     #   lon_max = input('Ingrese el limite maximo de longitud: ')
+        #lat_min = input('Ingrese el limite minimo de latitud: ')
+        #lat_max = input('Ingrese el limite maximo de latitud: ')  
+        #lon_min = input('Ingrese el limite minimo de longitud: ')
+        #lon_max = input('Ingrese el limite maximo de longitud: ')
         print("=" * 15 + " Req No. 5 Outputs " + "=" * 15)
         lat_min ="31.33"
         lat_max ="37"
@@ -202,11 +209,10 @@ while True:
 
     elif int(inputs[0]) == 8:     
         print("=" * 15 + " Req No. 6 Inputs " + "=" * 15)
-  #      lat_min = input('Ingrese el limite minimo de latitud: ')
-   #     lat_max = input('Ingrese el limite maximo de latitud: ')  
-    #    lon_min = input('Ingrese el limite minimo de longitud: ')
-     #   lon_max = input('Ingrese el limite maximo de longitud: ')
-
+        #lat_min = input('Ingrese el limite minimo de latitud: ')
+        #lat_max = input('Ingrese el limite maximo de latitud: ')  
+        #lon_min = input('Ingrese el limite minimo de longitud: ')
+        #lon_max = input('Ingrese el limite maximo de longitud: ')
         lat_min ="31.33"
         lat_max ="37"
         lon_min ="-109.05"
