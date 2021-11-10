@@ -50,6 +50,7 @@ def newCatalog():
     catalog['topciudades'] = om.newMap(omaptype="RBT", comparefunction=compareDates) #rbt ordenado por cantidad de avistamientos.
     catalog['hh:mm'] = om.newMap(omaptype="RBT", comparefunction=compareDates) #hora:min--arbolfecha-info
     catalog['AA-MM'] = om.newMap(omaptype="RBT", comparefunction=compareDates) #A-M-D--arbolfecha-info
+    catalog['omxsegundos'] = om.newMap(omaptype="RBT", comparefunction=compareDates) #duration (seconds) - UFO
     return catalog
 
 # Funciones para agregar informacion al catalogo
@@ -57,6 +58,7 @@ def addUFO(catalog,UFO):
 
     #Carga del rbt principal ordenado por datetime de todos los avistamientos.
     date = datetime.datetime.strptime(UFO["datetime"], "%Y-%m-%d %H:%M:%S")
+    UFO['duration (seconds)'] = float(UFO['duration (seconds)']) 
     om.put(catalog['info'], date, UFO)
     
     #Req1: Carga de ciudad-rbt ordenado por fecha de avistamiento
@@ -69,7 +71,30 @@ def addUFO(catalog,UFO):
         arbol = mp.get(catalog["ciudad"], UFO['city'])["value"]
         om.put(arbol,date,UFO)
         mp.put(catalog["ciudad"], UFO['city'], arbol)
+   #Req2: Carga de duration (seconds) - sightings
+    presente = om.contains(catalog['omxsegundos'], UFO['duration (seconds)'])
+    if not presente:
+        x = om.newMap(omaptype="BST", comparefunction=comparealfabeto)
+        key = UFO['city'] + UFO['country']
+        om.put(x, key, UFO)
+        om.put(catalog['omxsegundos'], UFO['duration (seconds)'], x)
 
+    else:
+        x = om.get(catalog['omxsegundos'], UFO['duration (seconds)'])['value']
+        key = UFO['city'] + UFO['country']
+        presente = om.contains(x,key)
+        if not presente:
+            om.put(x,key,UFO)
+            om.put(catalog['omxsegundos'], UFO['duration (seconds)'], x)
+        else:
+            while presente:
+                key = key + "a"
+                presente = om.contains(x,key)
+                if presente: 
+                    pass
+                else:
+                    om.put(x,key,UFO)
+                    om.put(catalog['omxsegundos'], UFO['duration (seconds)'], x)
     #Req3:
     
     h = int(UFO["datetime"][-8:-6])
@@ -151,6 +176,15 @@ def compareDates(date1, date2):
     else:
         return -1
 
+def comparealfabeto(date1,date2):
+    x = min(date1,date2)
+    if (date1 == date2):
+        return 0
+    elif x == date1:
+        return -1
+    elif x == date2:
+        return 1
+
 
 def requerimiento1(catalog, ciudad):
     #Se obtiene el rbt que tiene ordenado por fechas los avistamientos de esa ciudad:
@@ -194,6 +228,56 @@ def requerimiento1(catalog, ciudad):
         lt.addLast(menoresymayores3,x)
     return(size, sizecitys,mayores5,menoresymayores3)
 
+def requerimiento2(catalog, mins, maxs):
+    mins = float(mins)
+    maxs = float(maxs)
+    #Se obtiene el catalogo donde están guardados por duración segundos - lista de todas las obras en ese tiempo
+    omxseg = catalog['omxsegundos']
+    #Se obtiene el size de este catálogo para ver los distintos tipos de duración.
+    sizesegundos = om.size(omxseg)
+    #Se toman las 5 duraciones mas largas y su cantidad
+    omxseg2 = omxseg.copy()
+    listafinalduracion = lt.newList()
+    for x in range(5):
+        keymax = om.maxKey(omxseg2)
+        max = om.get(omxseg2,keymax)["value"]
+        om.deleteMax(omxseg2)
+        sizemax = om.size(max)
+        dict = {}
+        dict["llave"] = keymax
+        dict["valor"] = sizemax
+        lt.addLast(listafinalduracion,dict)
+    #Ahora vamos a tomar los valores dentro del rango
+    valores = om.values(omxseg,mins,maxs)
+
+    #Tomamos el size para saber la cantidad de valores en el rango.
+    size = 0
+    for i in lt.iterator(valores):
+        sizea = om.size(i)
+        size += sizea
+    #Tomamos las llaves para buscar los menores y mayores datos en el rango
+    keys = om.keys(omxseg,mins,maxs)
+    llaveminima = lt.firstElement(keys)
+    llavemaxima = lt.lastElement(keys)
+    arbolmin = om.get(omxseg,llaveminima)["value"].copy()
+    arbolmax = om.get(omxseg,llavemaxima)["value"].copy()
+    listafinal = lt.newList(datastructure="ARRAY_LIST")
+    listamax= lt.newList()
+    #Hacemos el recorrido y tomamos los mas pequeños, y alistamos los mas grandes.
+    for x in range(3):
+        keyminima = om.minKey(arbolmin)
+        minima = om.get(arbolmin,keyminima)["value"]
+        lt.addLast(listafinal,minima)
+        om.deleteMin(arbolmin)
+        keymaxima = om.maxKey(arbolmax)
+        maxima = om.get(arbolmax,keymaxima)['value']
+        lt.addFirst(listamax,maxima)
+        om.deleteMax(arbolmax)
+    #Agregamos los mas grandes 
+    for x in lt.iterator(listamax):
+        lt.addLast(listafinal,x)
+
+    return (sizesegundos,listafinalduracion, size,listafinal)
 
 def requerimiento3(catalog, begin, end):
     h1 = int(begin[0:2])

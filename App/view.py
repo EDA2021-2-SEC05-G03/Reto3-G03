@@ -97,7 +97,26 @@ while True:
             print('shape: ' + x['shape'])
             print('duration (seconds): ' + x['duration (seconds)'])
             print("=" * 50)
-        
+
+    elif int(inputs[0]) == 4:
+        print("=" * 15 + " Req No. 2 Inputs " + "=" * 15)
+        mins = input("UFO sightings between ")
+        maxs = input("and ")
+        info = controller.requerimiento2(catalog,mins,maxs)
+        print("=" * 15 + " Req No. Answer " + "=" * 15)
+        print('There are ' + str(info[0]) + ' different UFO sightings durations...')
+        print('The TOP 5 durations with longest UFO sightings are:')
+        print("=" * 48)
+        for x in lt.iterator(info[1]):
+            print('     duration (seconds): ' + str(int(x["llave"])) + ', count: ' + str(int(x["valor"])))
+            print("=" * 48)
+        print('There are ' + str(info[2]) + ' sightings between: ' + mins + ' and ' + maxs + ' duration')
+        print('The first 3 and last 3 UFO sightings in the duration time are:')
+        for x in lt.iterator(info[3]):
+            print(x['city'])
+            print(x['datetime'])
+            print(x['duration (seconds)'])
+            print (x['country'])
    
     elif int(inputs[0]) == 5:
         lim_inf = input('Ingrese el limite inferior en formato HH:MM: ')
