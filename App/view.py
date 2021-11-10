@@ -150,6 +150,16 @@ while True:
         for i in lt.iterator(info[1]):                             
             print("|"+ str(i["datetime"])+" | "+ i["city"].center(30)+" | "+ i["country"].center(15)+" | "+i["shape"].center(20)+" | "+ str(i["duration (seconds)"]).center(30)+" | ")
             print("+"+("-"*127)+"+") 
+    elif int(inputs[0]) == 7:
+       # lon_max = input('Ingrese el limite maximo de longitud: ')
+        #lon_min = input('Ingrese el limite minimo de longitud: ')
+        #lat_max = input('Ingrese el limite maximo de latitud: ')
+        #lat_min = input('Ingrese el limite minimo de latitud: ')
+        lat_max="37.0"
+        lat_min="31.33"
+        lon_max="-109.05"
+        lon_min="-103.0"
+        info = controller.requerimiento5(catalog,lon_max,lon_min,lat_max,lat_min)
     else:
         sys.exit(0)
 sys.exit(0)

@@ -51,6 +51,7 @@ def newCatalog():
     catalog['hh:mm'] = om.newMap(omaptype="RBT", comparefunction=compareDates) #hora:min--arbolfecha-info
     catalog['AA-MM'] = om.newMap(omaptype="RBT", comparefunction=compareDates) #A-M-D--arbolfecha-info
     catalog['omxsegundos'] = om.newMap(omaptype="RBT", comparefunction=compareDates) #duration (seconds) - UFO
+    catalog["lat"] = om.newMap(omaptype="RBT", comparefunction=compareDates)
     return catalog
 
 # Funciones para agregar informacion al catalogo
@@ -125,7 +126,21 @@ def addUFO(catalog,UFO):
     else:
         arbol2 = om.get(catalog["AA-MM"], fecha)["value"]
         om.put(arbol2,date,UFO)
-        om.put(catalog["AA-MM"], fecha, arbol2)   
+        om.put(catalog["AA-MM"], fecha, arbol2) 
+
+    #Req5:
+    lat = round(float(UFO["latitude"]),2)
+    long = round(float(UFO["longitude"]),2)
+    presente4 = om.contains(catalog["lat"],lat)
+    if not presente4:
+        arbol3 = om.newMap(omaptype="RBT", comparefunction=compareDates)      
+        om.put(arbol3,long,UFO)
+        om.put(catalog["lat"], lat, arbol3)
+    else:
+        arbol3 = om.get(catalog["lat"], lat)["value"]
+        om.put(arbol3,long,UFO)
+        om.put(catalog["lat"], lat, arbol3)
+
 
 def requerimiento1topciudades(catalog):
     """ 
@@ -385,5 +400,31 @@ def requerimiento4(catalog, begin, end):
             break
     return p1,p2
 
+def requerimiento5(catalog,lo_max,lo_min,la_max,la_min):
+    lon_max = round(float(lo_max),2)
+    lon_min = round(float(lo_min),2)
+    lat_max = round(float(la_max),2)
+    lat_min = round(float(la_min),2)
 
+    keys = om.values(catalog["lat"],lat_min,lat_max)
+    lista = lt.newList(datastructure="ARRAY_LIST")
+
+    for i in lt.iterator(keys):
+        print(i)
+        values = om.keys(i,lon_min,lon_max)
+        print(values)
+        lt.addLast(lista,values)
+
+    tam = 0
+    for t in lt.iterator(lista):
+        
+        l = lt.size(t)
+        tam += l
+
+    print(tam)
+  
+        
+
+
+        
         
