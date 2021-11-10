@@ -63,3 +63,6 @@ def requerimiento4(catalog, begin, end):
 
 def requerimiento5(catalog,lon_max,lon_min,lat_max,lat_min):
     return model.requerimiento5(catalog,lon_max,lon_min,lat_max,lat_min)
+
+def mapa(catalog,l):
+    return model.mapa(catalog,l)

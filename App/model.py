@@ -34,7 +34,7 @@ from DISClib.Algorithms.Sorting import shellsort as sa
 from DISClib.ADT import orderedmap as om
 assert cf
 import datetime
-
+import folium
 """
 Se define la estructura de un catálogo de videos. El catálogo tendrá dos listas, una para los videos, otra para las categorias de
 los mismos.
@@ -431,7 +431,7 @@ def requerimiento5(catalog,lo_max,lo_min,la_max,la_min):
             else:
                 s = lt.size(value)
                 
-            if s==1:
+            if s<2:
                 
                 lt.addLast(lista,i["root"]["value"])
             else:
@@ -444,8 +444,45 @@ def requerimiento5(catalog,lo_max,lo_min,la_max,la_min):
     return lista,l
 
  
-  
+def mapa(catalog,l):
+    s = lt.size(l)
+    m = folium.Map(location=[33.39, -104.52],zoom_start=5)  
+    
+    i=0
+    while i < s:
+        lat = lt.getElement(l,i-1)
         
+        long = lt.getElement(l,i)
+        
+        info = om.get(catalog["lat"],lat)["value"]
+        inf=om.get(info,long)["value"]
+        if type(inf) != dict:     
+            city = inf["city"]
+            duration = inf["duration (seconds)"]
+            shape=inf["shape"]
+            comments=inf["comments"]
+            folium.Marker(
+                location=[lat, long],
+                popup="City: "+str(city)+" Duration: "+str(duration)+" Shape: "+str(shape)+ " Comments: "+str(comments),
+                icon=folium.Icon(icon="cloud"),).add_to(m)
+        else:
+            count = 0
+            for u in lt.iterator(inf):
+                city = u["city"]
+                duration = u["duration (seconds)"]
+                shape=u["shape"]
+                comments=u["comments"]
+                
+                folium.Marker(
+                    location=[lat, long+count],
+                    popup="City: "+str(city)+" Duration: "+str(duration)+" Shape: "+str(shape)+ " Comments: "+str(comments),
+                    icon=folium.Icon(icon="cloud"),).add_to(m)
+                count += 0.001
+                    
+        m.save("C:\\Users\\maril\\Desktop\\mapG03.html")
+        i += 2
+    m
+    
 
 
         
