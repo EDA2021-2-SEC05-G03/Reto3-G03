@@ -107,7 +107,7 @@ while True:
         print("+"+("-"*127)+"+")
         print("|"+ "datetime".center(19)+" | "+ "city".center(30)+" | "+ "country".center(15)+" | "+"shape".center(20)+" | "+ str("duration (seconds)").center(30)+" | ")
         print("+"+("-"*127)+"+")
-        count = 0
+        
         for i in lt.iterator(info[0]):                             
             print("|"+ str(i["datetime"])+" | "+ i["city"].center(30)+" | "+ i["country"].center(15)+" | "+i["shape"].center(20)+" | "+ str(i["duration (seconds)"]).center(30)+" | ")
             print("+"+("-"*127)+"+")
@@ -116,6 +116,21 @@ while True:
             print("|"+ str(i["datetime"])+" | "+ i["city"].center(30)+" | "+ i["country"].center(15)+" | "+i["shape"].center(20)+" | "+ str(i["duration (seconds)"]).center(30)+" | ")
             print("+"+("-"*127)+"+") 
 
+    elif int(inputs[0]) == 6:
+        lim_inf = input('Ingrese el limite inferior en formato AA-MM-DD: ')
+        lim_sup = input('Ingrese el limite superior en formato AA-MM-DD: ') 
+
+        info = controller.requerimiento4(catalog, lim_inf, lim_sup)
+        print("+"+("-"*127)+"+")
+        print("|"+ "datetime".center(19)+" | "+ "city".center(30)+" | "+ "country".center(15)+" | "+"shape".center(20)+" | "+ str("duration (seconds)").center(30)+" | ")
+        print("+"+("-"*127)+"+")
+        for i in lt.iterator(info[0]):                             
+            print("|"+str(i["datetime"])+" | "+ i["city"].center(30)+" | "+ i["country"].center(15)+" | "+i["shape"].center(20)+" | "+ str(i["duration (seconds)"]).center(30)+" | ")
+            print("+"+("-"*127)+"+")
+        
+        for i in lt.iterator(info[1]):                             
+            print("|"+ str(i["datetime"])+" | "+ i["city"].center(30)+" | "+ i["country"].center(15)+" | "+i["shape"].center(20)+" | "+ str(i["duration (seconds)"]).center(30)+" | ")
+            print("+"+("-"*127)+"+") 
     else:
         sys.exit(0)
 sys.exit(0)

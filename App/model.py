@@ -25,6 +25,7 @@
  """
 
 
+from DISClib.DataStructures.bst import keySet
 import config as cf
 from DISClib.ADT import list as lt
 from DISClib.ADT import map as mp
@@ -47,7 +48,8 @@ def newCatalog():
     catalog['info'] = om.newMap(omaptype="RBT", comparefunction=compareDates)
     catalog['ciudad']=mp.newMap(numelements=804,maptype="LINEAR_PROBING",loadfactor=0.5) #ciudad-rbtavistamientos
     catalog['topciudades'] = om.newMap(omaptype="RBT", comparefunction=compareDates) #rbt ordenado por cantidad de avistamientos.
-    catalog['hh:mm'] = om.newMap(omaptype="RBT", comparefunction=compareDates) #hora:min-info
+    catalog['hh:mm'] = om.newMap(omaptype="RBT", comparefunction=compareDates) #hora:min--arbolfecha-info
+    catalog['AA-MM'] = om.newMap(omaptype="RBT", comparefunction=compareDates) #A-M-D--arbolfecha-info
     return catalog
 
 # Funciones para agregar informacion al catalogo
@@ -56,8 +58,20 @@ def addUFO(catalog,UFO):
     #Carga del rbt principal ordenado por datetime de todos los avistamientos.
     date = datetime.datetime.strptime(UFO["datetime"], "%Y-%m-%d %H:%M:%S")
     om.put(catalog['info'], date, UFO)
+    
+    #Req1: Carga de ciudad-rbt ordenado por fecha de avistamiento
+    presente = mp.contains(catalog["ciudad"],UFO['city'])
+    if not presente:
+        arbol = om.newMap(omaptype="RBT", comparefunction=compareDates)      
+        om.put(arbol,date,UFO)
+        mp.put(catalog["ciudad"], UFO['city'], arbol)
+    else:
+        arbol = mp.get(catalog["ciudad"], UFO['city'])["value"]
+        om.put(arbol,date,UFO)
+        mp.put(catalog["ciudad"], UFO['city'], arbol)
 
-    date = datetime.datetime.strptime(UFO["datetime"], "%Y-%m-%d %H:%M:%S")
+    #Req3:
+    
     h = int(UFO["datetime"][-8:-6])
     m = int(UFO["datetime"][-5:-3])
     s = int(00)
@@ -73,17 +87,20 @@ def addUFO(catalog,UFO):
         om.put(arbol,date,UFO)
         om.put(catalog["hh:mm"], hora, arbol)
 
-    
-    #Req1: Carga de ciudad-rbt ordenado por fecha de avistamiento
-    presente = mp.contains(catalog["ciudad"],UFO['city'])
-    if not presente:
-        arbol = om.newMap(omaptype="RBT", comparefunction=compareDates)      
-        om.put(arbol,date,UFO)
-        mp.put(catalog["ciudad"], UFO['city'], arbol)
+    #Req4:
+    aa = int(UFO["datetime"][0:4])    
+    mm = int(UFO["datetime"][5:7])    
+    dd = int(UFO["datetime"][8:10])
+    fecha = datetime.date(aa,mm,dd)
+    presente3 = om.contains(catalog["AA-MM"],fecha)
+    if not presente3:
+        arbol2 = om.newMap(omaptype="RBT", comparefunction=compareDates)      
+        om.put(arbol2,date,UFO)
+        om.put(catalog["AA-MM"], fecha, arbol2)
     else:
-        arbol = mp.get(catalog["ciudad"], UFO['city'])["value"]
-        om.put(arbol,date,UFO)
-        mp.put(catalog["ciudad"], UFO['city'], arbol)
+        arbol2 = om.get(catalog["AA-MM"], fecha)["value"]
+        om.put(arbol2,date,UFO)
+        om.put(catalog["AA-MM"], fecha, arbol2)   
 
 def requerimiento1topciudades(catalog):
     """ 
@@ -221,5 +238,68 @@ def requerimiento3(catalog, begin, end):
                     break           
         else:
             None
+   
+
+    tot = om.keys(catalog["hh:mm"],datetime.time(h1,min_begin),datetime.time(h2,min_end))
+    
+    total = 0
+    for i in lt.iterator(tot):             
+        j = om.get(catalog["hh:mm"],i)["value"]       
+        total += om.size(j)
+
+    print("El total de avistamientos durante estas horas es de "+str(total))
 
     return(info,info2)
+
+
+def requerimiento4(catalog, begin, end):
+    aa_beg = int(begin[0:4])
+    mm_beg = int(begin[5:7])
+    dd_beg = int(begin[8:10])
+
+    aa_end = int(end[0:4])
+    mm_end = int(end[5:7])
+    dd_end = int(end[8:10])
+
+    fecha1 = datetime.date(aa_beg,mm_beg,dd_beg)
+    fecha2 = datetime.date(aa_end,mm_end,dd_end)
+    
+    total_d = om.size(catalog["AA-MM"])
+
+    print("There are "+ str(total_d)+" days whith UFO sightings ")
+
+    keys = om.keys(catalog["AA-MM"],fecha1,fecha2)
+    
+    s = 0
+    for i in lt.iterator(keys):             
+        j = om.get(catalog["AA-MM"],i)["value"]       
+        s += om.size(j)
+
+    print("There are "+ str(s)+" sightings between "+ str(begin)+" and "+str(end))
+    
+    p1 = lt.newList(datastructure="ARRAY_LIST")
+
+    for i in lt.iterator(keys):
+        tam = lt.size(p1)
+        if tam < 3:
+            f = om.get(catalog["AA-MM"],i)["value"]["root"]["value"]
+            lt.addLast(p1,f)
+        else:
+            break
+    
+    p2 = lt.newList(datastructure="ARRAY_LIST")
+    c = lt.size(keys)
+
+    for i in range(c,0,-1):
+        
+        tam = lt.size(p2)
+        if tam < 3:
+            elm = lt.getElement(keys,i)          
+            f = om.get(catalog["AA-MM"],elm)["value"]["root"]["value"]
+            lt.addFirst(p2,f)
+        else:
+            break
+    return p1,p2
+
+
+        

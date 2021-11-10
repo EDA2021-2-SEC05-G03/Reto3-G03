@@ -54,3 +54,6 @@ def requerimiento1(catalog, ciudad):
 
 def requerimiento3(catalog, begin, end):
     return model.requerimiento3(catalog, begin, end)
+
+def requerimiento4(catalog, begin, end):
+    return model.requerimiento4(catalog, begin, end)
