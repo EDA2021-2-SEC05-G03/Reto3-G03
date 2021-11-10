@@ -138,15 +138,18 @@ def addUFO(catalog,UFO):
         om.put(catalog["lat"], lat, arbol3)
     else:
         arbol3 = om.get(catalog["lat"], lat)["value"]
-        presente = om.contains(arbol3,long)
-        if not presente:
+        presente5 = om.contains(arbol3,long)
+        if not presente5:
             om.put(arbol3,long,UFO)
             om.put(catalog["lat"], lat, arbol3)
-        else:
+        else:      
             info = om.get(arbol3, long)["value"]
             lista = lt.newList(datastructure="ARRAY_LIST")
-            lt.addLast(lista,info)
-            lt.addLast(lista,UFO)
+            if type(info) != dict:
+                lt.addLast(lista,info)
+                lt.addLast(lista,UFO)
+            else:
+                lt.addLast(lista,UFO)
             om.put(arbol3,long,lista)
             om.put(catalog["lat"], lat, arbol3)
             
@@ -426,20 +429,32 @@ def requerimiento5(catalog,lo_max,lo_min,la_max,la_min):
             value = i["root"]["value"]
             s = lt.size(i["root"])
 
-            if type(value) != dict:
+            if type(value) != dict:              
                 s = om.size(i)
             else:
                 s = lt.size(value)
                 
-            if s<2:
-                
-                lt.addLast(lista,i["root"]["value"])
+            if s<2:         
+                if type(value)!= dict:            
+                    print("1",value)
+                    lt.addLast(lista,value)
+                else:
+                    
+                    x = (value["elements"][0])
+                    print("2",x)
+                    lt.addLast(lista,x)
             else:
-                for i in lt.iterator(value):
-                   
-                    lt.addLast(lista,i)
+                
+                if type(value)!= dict:          
+                    print("3",value)        
+                    lt.addLast(lista,value)
+                else:
+                    for v in lt.iterator(value):    
+                        lt.addLast(lista,v)
    
     l = lt.size(lista)
+    print(" ")
+    print(lista)
     
     return lista,l
 
