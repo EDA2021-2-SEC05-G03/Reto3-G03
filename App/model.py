@@ -41,6 +41,7 @@ los mismos.
 """
 
 # Construccion de modelos
+
 def newCatalog():
     catalog = {'info': None,
     'ciudad' : None
@@ -55,6 +56,7 @@ def newCatalog():
     return catalog
 
 # Funciones para agregar informacion al catalogo
+
 def addUFO(catalog,UFO):
 
     #Carga del rbt principal ordenado por datetime de todos los avistamientos.
@@ -153,46 +155,6 @@ def addUFO(catalog,UFO):
             om.put(arbol3,long,lista)
             om.put(catalog["lat"], lat, arbol3)
             
-
-
-def requerimiento1topciudades(catalog):
-    """ 
-    Se va a crear un rbt ordenado por la cantidad de avistamientos
-    en cada ciudad, para hacer la tabla del requerimiento 1 del top
-    5 ciudades con mayor número de avistamientos.
-    """
-    #Se obtienen las llaves de todo el mapa
-    ciudades = mp.keySet(catalog['ciudad'])
-    #Se itera para ir agregando al order map en orden de avistamientos.
-    for ciudad in lt.iterator(ciudades):
-        arbol = mp.get(catalog['ciudad'], ciudad)['value']
-        tamaño = om.size(arbol)
-        datos = (ciudad,tamaño)
-        presente = om.contains(catalog['topciudades'], tamaño)
-        if not presente:
-            lista = lt.newList(datastructure="ARRAYLIST")
-            lt.addLast(lista, datos)
-            om.put(catalog['topciudades'], tamaño, lista)
-        else:
-            lista = om.get(catalog['topciudades'], tamaño)['value']
-            lt.addLast(lista,datos)
-
-
-
-
-
-    
-
-
-
-# Funciones para creacion de datos
-
-# Funciones de consulta
-
-# Funciones utilizadas para comparar elementos dentro de una lista
-
-# Funciones de ordenamiento
-
 # Funciones de comparación
 
 def compareDates(date1, date2):
@@ -213,6 +175,7 @@ def comparealfabeto(date1,date2):
     elif x == date2:
         return 1
 
+#Funciones de requerimientos:
 
 def requerimiento1(catalog, ciudad):
     #Se obtiene el rbt que tiene ordenado por fechas los avistamientos de esa ciudad:
@@ -255,6 +218,28 @@ def requerimiento1(catalog, ciudad):
     for x in lt.iterator(mayoresinorganizar):
         lt.addLast(menoresymayores3,x)
     return(size, sizecitys,mayores5,menoresymayores3)
+
+def requerimiento1topciudades(catalog):
+    """ 
+    Se va a crear un rbt ordenado por la cantidad de avistamientos
+    en cada ciudad, para hacer la tabla del requerimiento 1 del top
+    5 ciudades con mayor número de avistamientos.
+    """
+    #Se obtienen las llaves de todo el mapa
+    ciudades = mp.keySet(catalog['ciudad'])
+    #Se itera para ir agregando al order map en orden de avistamientos.
+    for ciudad in lt.iterator(ciudades):
+        arbol = mp.get(catalog['ciudad'], ciudad)['value']
+        tamaño = om.size(arbol)
+        datos = (ciudad,tamaño)
+        presente = om.contains(catalog['topciudades'], tamaño)
+        if not presente:
+            lista = lt.newList(datastructure="ARRAYLIST")
+            lt.addLast(lista, datos)
+            om.put(catalog['topciudades'], tamaño, lista)
+        else:
+            lista = om.get(catalog['topciudades'], tamaño)['value']
+            lt.addLast(lista,datos)
 
 def requerimiento2(catalog, mins, maxs):
     mins = float(mins)
@@ -362,7 +347,6 @@ def requerimiento3(catalog, begin, end):
 
     return(info,info2)
 
-
 def requerimiento4(catalog, begin, end):
     aa_beg = int(begin[0:4])
     mm_beg = int(begin[5:7])
@@ -450,7 +434,6 @@ def requerimiento5(catalog,lo_max,lo_min,la_max,la_min):
 
     return lista,l
 
- 
 def mapa(catalog,l):
     s = lt.size(l)
     m = folium.Map(location=[33.39, -104.52],zoom_start=5)  
