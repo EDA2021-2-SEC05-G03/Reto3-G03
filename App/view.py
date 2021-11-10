@@ -151,15 +151,22 @@ while True:
             print("|"+ str(i["datetime"])+" | "+ i["city"].center(30)+" | "+ i["country"].center(15)+" | "+i["shape"].center(20)+" | "+ str(i["duration (seconds)"]).center(30)+" | ")
             print("+"+("-"*127)+"+") 
     elif int(inputs[0]) == 7:
-       # lon_max = input('Ingrese el limite maximo de longitud: ')
-        #lon_min = input('Ingrese el limite minimo de longitud: ')
-        #lat_max = input('Ingrese el limite maximo de latitud: ')
-        #lat_min = input('Ingrese el limite minimo de latitud: ')
-        lat_max="37.0"
-        lat_min="31.33"
-        lon_min="-109.05"
-        lon_max="-103.0"
+        lon_max = input('Ingrese el limite maximo de longitud: ')
+        lon_min = input('Ingrese el limite minimo de longitud: ')
+        lat_max = input('Ingrese el limite maximo de latitud: ')
+        lat_min = input('Ingrese el limite minimo de latitud: ')
+        
         info = controller.requerimiento5(catalog,lon_max,lon_min,lat_max,lat_min)
+        print("There are "+str(info[1]) +" different UFO sightings in the area")
+        print("+"+("-"*161)+"+")
+        print("|"+ "datetime".center(19)+" | "+ "city".center(20)+" | "+ "state".center(15)+" | "+"country".center(20)+" | "+ str("shape").center(15)+" | "+ str("duration (seconds)").center(30)+" | "+ str("latitude").center(10)+" | "+ str("longitude").center(10)+" | ")
+        print("+"+("-"*161)+"+")
+        for i in lt.iterator(info[0]):                             
+            print("|"+ i["datetime"]+" | "+ i["city"].center(20)+" | "+ i["state"].center(15)+" | "+i["country"].center(20)+" | "+ i["shape"].center(15)+" | "+ str(i["duration (seconds)"]).center(30)+" | "+ str(round(float(i["latitude"]),2)).center(10)+" | "+ str(round(float(i["longitude"]),2)).center(10)+" | ")
+            print("+"+("-"*161)+"+")
+        
+         
+    
     else:
         sys.exit(0)
 sys.exit(0)

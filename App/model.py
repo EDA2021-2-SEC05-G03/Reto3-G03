@@ -426,21 +426,22 @@ def requerimiento5(catalog,lo_max,lo_min,la_max,la_min):
             value = i["root"]["value"]
             s = lt.size(i["root"])
 
-            print(s)
-            if value[0]== "elements":
+            if type(value) != dict:
+                s = om.size(i)
+            else:
+                s = lt.size(value)
                 
             if s==1:
-                lt.addLast(lista,i["root"]["key"])
+                
+                lt.addLast(lista,i["root"]["value"])
             else:
-                d = om.get(i,i["root"]["key"])
-                print(d)
-                for i in lt.iterator(d):
+                for i in lt.iterator(value):
+                   
                     lt.addLast(lista,i)
-            
-
-    
+   
     l = lt.size(lista)
-    print(lista)
+    
+    return lista,l
 
  
   
