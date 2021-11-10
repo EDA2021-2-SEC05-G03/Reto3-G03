@@ -199,6 +199,7 @@ while True:
         t2 = process_time()
         time = t2 -t1
         print("There are "+str(info[1]) +" different UFO sightings in the area")
+        print("The first 5 and last 5 UFO sightings in this time are: ")
         print("+"+("-"*171)+"+")
         print("|"+ "datetime".center(19)+" | "+ "city".center(30)+" | "+ "state".center(15)+" | "+"country".center(20)+" | "+ str("shape").center(15)+" | "+ str("duration (seconds)").center(30)+" | "+ str("latitude").center(10)+" | "+ str("longitude").center(10)+" | ")
         print("+"+("-"*171)+"+")
