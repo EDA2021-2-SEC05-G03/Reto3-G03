@@ -78,15 +78,15 @@ while True:
         print('The TOP 5 cities with most UFO sightings are: ')
         #Se imprimen las top 5 mayores ciudades con mayor cantidad de avistamientos
         y = 0
-        print ("=" * 48)
+        print("+"+("-"*50)+"+")
+        print("|"+ 'City'.center(25) +" | "+ 'Count'.center(25)+ " | " )
+        print("+"+("-"*50)+"+")
         for x in lt.iterator(info[2]):
             if y > 4:
                 break
             y += 1
-            print(str(y) + ". City: " + x[0] + ", Count: " + str(x[1]))
-            print("=" * 48)
-        #
-        print('There are ' + str(info[0]) + ' sigthings at the: ' + ciudad + ' city')
+            print('|' + str(y) +  x[0].center(25) + ' | ' + str(x[1]).center(22) + '|')
+            print("+"+("-"*50)+"+")
         print('The first 3 and last 3 UFO sigthings in the city are:')
         
         print("+"+("-"*143)+"+")

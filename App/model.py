@@ -264,20 +264,19 @@ def requerimiento2(catalog, mins, maxs):
     #Se obtiene el size de este catálogo para ver los distintos tipos de duración.
     sizesegundos = om.size(omxseg)
     #Se toman las 5 duraciones mas largas y su cantidad
-    omxseg2 = omxseg.copy()
     listafinalduracion = lt.newList()
-    for x in range(5):
-        keymax = om.maxKey(omxseg2)
-        max = om.get(omxseg2,keymax)["value"]
-        om.deleteMax(omxseg2)
-        sizemax = om.size(max)
-        dict = {}
-        dict["llave"] = keymax
-        dict["valor"] = sizemax
-        lt.addLast(listafinalduracion,dict)
+    keymax = om.maxKey(omxseg)
+    max = om.get(omxseg,keymax)["value"]
+    sizemax = om.size(max)
+    dict = {}
+    dict["llave"] = keymax
+    dict["valor"] = sizemax
+    lt.addLast(listafinalduracion,dict)
+    
     #Ahora vamos a tomar los valores dentro del rango
+    print (om.size(omxseg))
+    print (sizesegundos)
     valores = om.values(omxseg,mins,maxs)
-
     #Tomamos el size para saber la cantidad de valores en el rango.
     size = 0
     for i in lt.iterator(valores):
