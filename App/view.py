@@ -88,15 +88,13 @@ while True:
         #
         print('There are ' + str(info[0]) + ' sigthings at the: ' + ciudad + ' city')
         print('The first 3 and last 3 UFO sigthings in the city are:')
-        print("=" * 50)
+        
+        print("+"+("-"*143)+"+")
+        print("|"+ "datetime".center(19)+" | "+ "city".center(30)+" | "+ "state".center(15)+" | "+"country".center(15)+"|"+"shape".center(20)+" | "+ str("duration (seconds)").center(30)+" | ")
+        print("+"+("-"*143)+"+")
         for x in lt.iterator(info[3]):
-            print('datetime: ' + str(x['datetime']))
-            print('city: ' + x['city'])
-            print('state: ' + x['state'])
-            print('country: ' + x['country'])
-            print('shape: ' + x['shape'])
-            print('duration (seconds): ' + x['duration (seconds)'])
-            print("=" * 50)
+            print("|"+ str(x["datetime"]).center(19)+" | "+ x["city"].center(30)+" | "+ x["state"].center(15)+" | "+x["country"].center(15)+"|"+x["shape"].center(20)+" | "+ str(x["duration (seconds)"]).center(30)+" | ")
+            print("+"+("-"*143)+"+")
 
     elif int(inputs[0]) == 4:
         print("=" * 15 + " Req No. 2 Inputs " + "=" * 15)
@@ -112,6 +110,7 @@ while True:
             print("=" * 48)
         print('There are ' + str(info[2]) + ' sightings between: ' + mins + ' and ' + maxs + ' duration')
         print('The first 3 and last 3 UFO sightings in the duration time are:')
+        
         for x in lt.iterator(info[3]):
             print(x['city'])
             print(x['datetime'])
@@ -119,9 +118,10 @@ while True:
             print (x['country'])
    
     elif int(inputs[0]) == 5:
+        print("=" * 15 + " Req No. 3 Inputs " + "=" * 15)
         lim_inf = input('Ingrese el limite inferior en formato HH:MM: ')
         lim_sup = input('Ingrese el limite superior en formato HH:MM: ')
-
+        print("=" * 15 + " Req No. 3 Outputs " + "=" * 15)
         info = controller.requerimiento3(catalog, lim_inf, lim_sup)
         print("+"+("-"*127)+"+")
         print("|"+ "datetime".center(19)+" | "+ "city".center(30)+" | "+ "country".center(15)+" | "+"shape".center(20)+" | "+ str("duration (seconds)").center(30)+" | ")
@@ -136,9 +136,10 @@ while True:
             print("+"+("-"*127)+"+") 
 
     elif int(inputs[0]) == 6:
+        print("=" * 15 + " Req No. 4 Inputs " + "=" * 15)
         lim_inf = input('Ingrese el limite inferior en formato AA-MM-DD: ')
         lim_sup = input('Ingrese el limite superior en formato AA-MM-DD: ') 
-
+        print("=" * 15 + " Req No. 4 Outputs " + "=" * 15)
         info = controller.requerimiento4(catalog, lim_inf, lim_sup)
         print("+"+("-"*127)+"+")
         print("|"+ "datetime".center(19)+" | "+ "city".center(30)+" | "+ "country".center(15)+" | "+"shape".center(20)+" | "+ str("duration (seconds)").center(30)+" | ")
@@ -151,11 +152,12 @@ while True:
             print("|"+ str(i["datetime"])+" | "+ i["city"].center(30)+" | "+ i["country"].center(15)+" | "+i["shape"].center(20)+" | "+ str(i["duration (seconds)"]).center(30)+" | ")
             print("+"+("-"*127)+"+") 
     elif int(inputs[0]) == 7:
+        print("=" * 15 + " Req No. 5 Inputs " + "=" * 15)
    #      lat_min = input('Ingrese el limite minimo de latitud: ')
    #     lat_max = input('Ingrese el limite maximo de latitud: ')  
     #    lon_min = input('Ingrese el limite minimo de longitud: ')
      #   lon_max = input('Ingrese el limite maximo de longitud: ')
-
+        print("=" * 15 + " Req No. 5 Outputs " + "=" * 15)
         lat_min ="31.33"
         lat_max ="37"
         lon_min ="-109.05"
@@ -169,7 +171,8 @@ while True:
         for i in lt.iterator(info[0]):                             
             print("|"+ i["datetime"]+" | "+ i["city"].center(30)+" | "+ i["state"].center(15)+" | "+i["country"].center(20)+" | "+ i["shape"].center(15)+" | "+ str(i["duration (seconds)"]).center(30)+" | "+ str(round(float(i["latitude"]),2)).center(10)+" | "+ str(round(float(i["longitude"]),2)).center(10)+" | ")
             print("+"+("-"*171)+"+")
-    elif int(inputs[0]) == 8:        
+    elif int(inputs[0]) == 8:     
+        print("=" * 15 + " Req No. 6 Inputs " + "=" * 15)
   #      lat_min = input('Ingrese el limite minimo de latitud: ')
    #     lat_max = input('Ingrese el limite maximo de latitud: ')  
     #    lon_min = input('Ingrese el limite minimo de longitud: ')
@@ -179,6 +182,7 @@ while True:
         lat_max ="37"
         lon_min ="-109.05"
         lon_max ="-103"
+        print("=" * 15 + " Req No. 6 Outputs " + "=" * 15)
         info = controller.requerimiento5(catalog,lon_max,lon_min,lat_max,lat_min)
         print("There are "+str(info[1]) +" different UFO sightings in the area")
         print("+"+("-"*171)+"+")
@@ -190,7 +194,7 @@ while True:
             long = round(float(i["longitude"]),2)  
             city = i["city"]                        
             print("|"+ i["datetime"]+" | "+ i["city"].center(30)+" | "+ i["state"].center(15)+" | "+i["country"].center(20)+" | "+ i["shape"].center(15)+" | "+ str(i["duration (seconds)"]).center(30)+" | "+ str(lat).center(10)+" | "+ str(long).center(10)+" | ")
-            print("+"+("-"*161)+"+")
+            print("+"+("-"*171)+"+")
             lt.addLast(l,lat)
             lt.addLast(l,long)
         

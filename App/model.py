@@ -435,27 +435,20 @@ def requerimiento5(catalog,lo_max,lo_min,la_max,la_min):
                 s = lt.size(value)
                 
             if s<2:         
-                if type(value)!= dict:            
-                    print("1",value)
+                if type(value)!= dict:           
                     lt.addLast(lista,value)
-                else:
-                    
+                else:                   
                     x = (value["elements"][0])
-                    print("2",x)
                     lt.addLast(lista,x)
-            else:
-                
-                if type(value)!= dict:          
-                    print("3",value)        
+            else:                
+                if type(value)!= dict:              
                     lt.addLast(lista,value)
                 else:
                     for v in lt.iterator(value):    
                         lt.addLast(lista,v)
    
     l = lt.size(lista)
-    print(" ")
-    print(lista)
-    
+
     return lista,l
 
  
