@@ -200,12 +200,12 @@ while True:
         time = t2 -t1
         print("There are "+str(info[1]) +" different UFO sightings in the area")
         print("The first 5 and last 5 UFO sightings in this time are: ")
-        print("+"+("-"*171)+"+")
-        print("|"+ "datetime".center(19)+" | "+ "city".center(30)+" | "+ "state".center(15)+" | "+"country".center(20)+" | "+ str("shape").center(15)+" | "+ str("duration (seconds)").center(30)+" | "+ str("latitude").center(10)+" | "+ str("longitude").center(10)+" | ")
-        print("+"+("-"*171)+"+")
+        print("+"+("-"*176)+"+")
+        print("|"+ "datetime".center(19)+" | "+ "city".center(35)+" | "+ "state".center(15)+" | "+"country".center(20)+" | "+ str("shape").center(15)+" | "+ str("duration (seconds)").center(30)+" | "+ str("latitude").center(10)+" | "+ str("longitude").center(10)+" | ")
+        print("+"+("-"*176)+"+")
         for i in lt.iterator(info[0]):                             
-            print("|"+ i["datetime"]+" | "+ i["city"].center(30)+" | "+ i["state"].center(15)+" | "+i["country"].center(20)+" | "+ i["shape"].center(15)+" | "+ str(i["duration (seconds)"]).center(30)+" | "+ str(round(float(i["latitude"]),2)).center(10)+" | "+ str(round(float(i["longitude"]),2)).center(10)+" | ")
-            print("+"+("-"*171)+"+")
+            print("|"+ i["datetime"]+" | "+ i["city"].center(35)+" | "+ i["state"].center(15)+" | "+i["country"].center(20)+" | "+ i["shape"].center(15)+" | "+ str(i["duration (seconds)"]).center(30)+" | "+ str(round(float(i["latitude"]),2)).center(10)+" | "+ str(round(float(i["longitude"]),2)).center(10)+" | ")
+            print("+"+("-"*176)+"+")
         print("El tiempo para cargar los archivos fue de:", str(time) , "s") 
 
     elif int(inputs[0]) == 8:     
@@ -224,23 +224,19 @@ while True:
         t2 = process_time()
         time = t2 -t1
         print("There are "+str(info[1]) +" different UFO sightings in the area")
-        print("+"+("-"*171)+"+")
-        print("|"+ "datetime".center(19)+" | "+ "city".center(30)+" | "+ "state".center(15)+" | "+"country".center(20)+" | "+ str("shape").center(15)+" | "+ str("duration (seconds)").center(30)+" | "+ str("latitude").center(10)+" | "+ str("longitude").center(10)+" | ")
-        print("+"+("-"*171)+"+")
+        print("+"+("-"*176)+"+")
+        print("|"+ "datetime".center(19)+" | "+ "city".center(35)+" | "+ "state".center(15)+" | "+"country".center(20)+" | "+ str("shape").center(15)+" | "+ str("duration (seconds)").center(30)+" | "+ str("latitude").center(10)+" | "+ str("longitude").center(10)+" | ")
+        print("+"+("-"*176)+"+")
         l = lt.newList(datastructure="ARRAY_LIST")
         for i in lt.iterator(info[0]):   
             lat = round(float(i["latitude"]),2)
-            long = round(float(i["longitude"]),2)  
-            city = i["city"]                        
-            print("|"+ i["datetime"]+" | "+ i["city"].center(30)+" | "+ i["state"].center(15)+" | "+i["country"].center(20)+" | "+ i["shape"].center(15)+" | "+ str(i["duration (seconds)"]).center(30)+" | "+ str(lat).center(10)+" | "+ str(long).center(10)+" | ")
-            print("+"+("-"*171)+"+")
+            long = round(float(i["longitude"]),2)                                
+            print("|"+ i["datetime"]+" | "+ i["city"].center(35)+" | "+ i["state"].center(15)+" | "+i["country"].center(20)+" | "+ i["shape"].center(15)+" | "+ str(i["duration (seconds)"]).center(30)+" | "+ str(lat).center(10)+" | "+ str(long).center(10)+" | ")
+            print("+"+("-"*176)+"+")
             lt.addLast(l,lat)
-            lt.addLast(l,long)
-        
+            lt.addLast(l,long)   
         mapa = controller.mapa(catalog,l)
         print("El tiempo para cargar los archivos fue de:", str(time) , "s") 
-         
-    
     else:
         sys.exit(0)
 sys.exit(0)

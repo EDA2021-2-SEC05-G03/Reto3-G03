@@ -46,8 +46,8 @@ def newCatalog():
     catalog = {'info': None,
     'ciudad' : None
     }
-    catalog['info'] = om.newMap(omaptype="RBT", comparefunction=compareDates)
-    catalog['ciudad']=mp.newMap(numelements=804,maptype="LINEAR_PROBING",loadfactor=0.5) #ciudad-rbtavistamientos
+    catalog['info'] = om.newMap(omaptype="RBT", comparefunction=compareDates) #fecha-info
+    catalog['ciudad']=mp.newMap(numelements=109000,maptype="LINEAR_PROBING",loadfactor=0.5) #ciudad-rbtavistamientos
     catalog['topciudades'] = om.newMap(omaptype="RBT", comparefunction=compareDates) #rbt ordenado por cantidad de avistamientos.
     catalog['hh:mm'] = om.newMap(omaptype="RBT", comparefunction=compareDates) #hora:min--arbolfecha-info
     catalog['AA-MM'] = om.newMap(omaptype="RBT", comparefunction=compareDates) #A-M-D--arbolfecha-info
@@ -135,28 +135,23 @@ def addUFO(catalog,UFO):
     long = round(float(UFO["longitude"]),2)
     presente4 = om.contains(catalog["lat"],lat)
     if not presente4:
-        arbol3 = om.newMap(omaptype="RBT", comparefunction=compareDates)      
-        om.put(arbol3,long,UFO)
+        arbol3 = om.newMap(omaptype="RBT", comparefunction=compareDates)  
+        lista = lt.newList(datastructure="ARRAY_LIST")  
+        lt.addLast(lista,UFO)  
+        om.put(arbol3,long,lista)
         om.put(catalog["lat"], lat, arbol3)
     else:
         arbol3 = om.get(catalog["lat"], lat)["value"]
-        k2 = om.get(catalog["lat"], lat)["value"]["root"]["key"]  
         presente5 = om.contains(arbol3,long)
         if not presente5:
-            val = om.valueSet(arbol3)            
-            for i in lt.iterator(val):
-                om.put(arbol3,k2,i)
-                om.put(catalog["lat"], lat, arbol3)
+            m =lt.newList(datastructure="ARRAY_LIST")
+            lt.addLast(m,UFO)
+            om.put(arbol3,long,m)                      
+            om.put(catalog["lat"], lat, arbol3)
         else:      
-            info = om.get(arbol3, long)["value"]
-            lista = lt.newList(datastructure="ARRAY_LIST")
-            if type(info) != dict:
-                lt.addLast(lista,info)                
-                lt.addLast(lista,UFO)
-            else:
-                for i in lt.iterator(info):
-                    lt.addLast(lista,i)
-            om.put(arbol3,k2,lista)
+            info = om.get(arbol3, long)["value"]           
+            lt.addLast(info,UFO)
+            om.put(arbol3,long,info)
             om.put(catalog["lat"], lat, arbol3)
             
 # Funciones de comparación
@@ -406,37 +401,22 @@ def requerimiento5(catalog,lo_max,lo_min,la_max,la_min):
     lat_max = round(float(la_max),2)
     lat_min = round(float(la_min),2)
 
-    values = om.values(catalog["lat"],lat_min,lat_max)
+    values = om.values(catalog["lat"],lat_min,lat_max) #lista de arboles
     
     lista = lt.newList(datastructure="ARRAY_LIST")
 
     for i in lt.iterator(values):  
-        key = i["root"]["key"]
-        if lon_min <= key <= lon_max:  
-            value = i["root"]["value"]
-            s = lt.size(i["root"])
+        key = om.keySet(i)
+        for w in lt.iterator(key):
+            if lon_min <= w <= lon_max:  
+                value = om.get(i,w)["value"]
+                        
+                for l in lt.iterator(value):
+                    lt.addLast(lista,l)
 
-            if type(value) != dict:              
-                s = om.size(i)
-            else:
-                s = lt.size(value)
-                
-            if s<2:         
-                if type(value)!= dict:           
-                    lt.addLast(lista,value)
-                else:                   
-                    x = (value["elements"][0])
-                    lt.addLast(lista,x)
-            else:                
-                if type(value)!= dict:              
-                    lt.addLast(lista,value)
-                else:
-                    for v in lt.iterator(value):    
-                        lt.addLast(lista,v)
-   
-    l = lt.size(lista)
+    z = lt.size(lista)
 
-    if l > 10:
+    if z > 10:
         listafinal = lt.newList(datastructure=("ARRAY_LIST"))
         for x in range(5):
             minimo = lt.firstElement(lista)
@@ -449,9 +429,9 @@ def requerimiento5(catalog,lo_max,lo_min,la_max,la_min):
             lt.deleteElement(lista,lt.size(lista))
         for x in lt.iterator(listamayores):
             lt.addLast(listafinal,x)
-        return listafinal,l
+        return listafinal,z
     else:
-        return lista,l
+        return lista,z
 
 def mapa(catalog,l):
     s = lt.size(l)
