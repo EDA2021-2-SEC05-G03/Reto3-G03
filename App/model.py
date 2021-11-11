@@ -436,7 +436,22 @@ def requerimiento5(catalog,lo_max,lo_min,la_max,la_min):
    
     l = lt.size(lista)
 
-    return lista,l
+    if l > 10:
+        listafinal = lt.newList(datastructure=("ARRAY_LIST"))
+        for x in range(5):
+            minimo = lt.firstElement(lista)
+            lt.addLast(listafinal,minimo)
+            lt.deleteElement(lista,1)
+        listamayores = lt.newList(datastructure="ARRAY_LIST")
+        for x in range(5):
+            maximo = lt.lastElement(lista)
+            lt.addFirst(listamayores,maximo)
+            lt.deleteElement(lista,lt.size(lista))
+        for x in lt.iterator(listamayores):
+            lt.addLast(listafinal,x)
+        return listafinal,l
+    else:
+        return lista,l
 
 def mapa(catalog,l):
     s = lt.size(l)
